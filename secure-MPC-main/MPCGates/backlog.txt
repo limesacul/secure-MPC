@@ -1,0 +1,134 @@
+---Test list---
+
+[x] The network is established correctly
+    [x] The number of channels is correct
+    [x] Parties can send messages to and receive messages from other parties
+
+[x] addition works for 3 parties
+    [x] The shares that a party creates sums to its secret
+    [x] After the protocol is started, each party receives 6 shares
+    [x] After the protocol is started, each party receives 6 fragments
+    [x] Fragments with same index should contain same value
+    [x] The sum of the result fragments matches the result. Currently not in use
+    [x] MPCResult is correct for all parties 
+    [x] 2 iterations of addition works
+
+[x] addition works for n parties
+    [x] The secrecy structure is created correctly for 3, 5 and 10 parties
+    [x] k is computed correctly for 3, 5 and 10 parties
+    [x] After the protocol is started for 5 parties, each party receives 30 shares
+    [x] After the protocol is started for 5 parties, each party receives 30 fragments
+    [x] MPCResult is correct for 5 parties 
+    [x] MPCResult is correct for 10 parties with specifically chosen secrets
+    [x] MPCResult is correct for 10 parties with randomly chosen secrets
+
+[x] multiplication works for n parties
+    [x] After the protocol is started for 3 parties each party receives 4 shares
+    [x] After the protocol is started for 5 parties each party receives 12 shares
+    [x] The partition is created correctly
+        [x] The intersection of all the partition subsets is empty
+        [x] The partition contains all pairs (i,j) for 0 <= i,j <= k for k = 3
+        [x] The partition contains all pairs (i,j) for 0 <= i,j <= k for k = 5
+        [x] For 3 parties, each party receives the shares in its partition subset
+        [x] For 5 parties, each party receives the shares in its partition subset 
+        [x] The partition has the correct length for 3, 5 and 10 parties
+    [x] MPCResult is correct for 3 parties with specifically chosen secrets
+    [x] MPCResult is correct for 3 parties with randomly chosen secrets
+    [x] MPCResult is correct for 5 parties
+
+
+[x] gate approach works for passive adversaries
+    [x] After an MPC protocol is started for 3 parties, each party receives 6 shares
+    [x] After an MPC protocol is started for 5 parties, each party receives 30 shares
+    
+    In the following a denotes party 0's secret, b party 1's secret and so on. We test for 5 parties
+    [x] The MPC "a" works 
+    [x] The MPC "a+b" works
+    [x] The MPC "(a+b)+(c+d)" works
+    [x] The MPC "a*b" works
+    [x] The MPC "(a * b) + (c * d)" works
+    [x] Runnning two MPCs back-to-back works
+
+[] Gate approach works for active adversaries
+    [x] VSS share works
+        [x] If all parties behave the protocol is completed
+        [x] If two parties receive different values for the same share, complaints are raised
+        [x] If the dealer complies with the complaint and broadcast the share, the protocol is completed
+        [x] If the dealer does not broadcasts the share, the protocol is aborted
+        [x] During the verification phase, if a player receives a share from someone outside of one of its access structure set, no complaints are raised
+        [x] If a dealer receives a complaint from a party that should not know the share, it does not dispute it
+    [x] Active multiplication works
+        [x] Step 1 of the protocol works
+            [x] The initial VSS sharing works for 3 parties using termMatrices
+            [x] If two parties receive different values for the same share in some term in some termMatrix, complaints are raised
+            [x] If the dealer complies with the complaint and broadcast the share, the protocol is completed
+            [x] If the dealer does not broadcasts the share, the protocol is aborted
+            [x] After step 1 of the protocol is completed, a qualified set should be able to reconstruct the product
+        [x] Step 2+3+4 of the protocol works
+            [x] If all parties behave, no reconstructions are done
+            [x] If no reconstructions are done, all parties have shares according to the access structure
+            [x] If an adversary has shared an incorrect value of a term, reconstructions are done
+    [x] Reconstruct works
+        [x] Adversary structure is created correctly
+            [x] Adversary structure that is not a subset of the secrecy structure is not allowed
+            [x] Adversary structure and secrecy structure violating condition 2 is not allowed
+            [x] Correct adversary structure and secrecy structure is allowed
+        [x] After all shares have been received in reconstruct the correct value according to the adversary structure is computed
+        [x] After reconstructing the intermediaries each party has the same slice 
+    [x] The MPC "a" works 
+    [x] The MPC "a+b" works
+    [x] The MPC "(a+b)+(c+d)" works
+    [x] The MPC "a*b" works
+    [x] The MPC "(a * b) + (c * d)" works
+    [x] Runnning two MPCs back-to-back works
+    [x] An adversary sending different values in step 1 of mult does not change the result
+    [x] An adversary sharing an incorrect value of a term does not change the result of a computation
+
+---Refactoring---
+
+[x] Make Party.shares a matrix with rowNumber == partyNumber and colomnNumber == shareIndex of that party. So len(rows) == n and len(col) == k. 
+[x] Move sender field from Operands to Message and have code compile 
+[x] Fix waitgroup to wait for something other than the last message send 
+
+[x] Refactoring for general secrecy structure
+    [x] The MPC "a+b" works for a custom secrecy structure
+    [x] Q^2 condition holds for 5 parties and a correct secrecy structure
+
+[x] Refactor to use pair-wise send/receive functions for different message-types. 
+    This would replace the current way of using the done channel.
+
+[x] Change name of broadcastedshare to disputedShare
+
+[x] Refactor to not use primes
+[x] change the domain to be a parameter to the protocol
+
+[x] clean up MPCProtocol method by creating helper methods
+
+---Benchmarking---
+Kør enten localt eller via hjemmesiden fra ComArk? 
+
+Før vi noterer vores resultater: 
+    Luk så mange programmer som muligt på pc'en 
+    Kør benchmarken op til flere gange, for at sikre at systemet er 'varmet op' (Påvirker resultatet åbenbart)
+
+[] Compare performance for passive and active 
+    [] Passive addition vs active addition 
+        [] compare performance for different secret sizes
+        [] compare performance for different number of parties
+        [] compare performance for different number of instructions
+    [] Passive mult vs active mult 
+        [] compare performance for different secret sizes
+        [] compare performance for different number of parties
+        [] compare performance for different number of instructions
+    [] Passive mix vs active mix 
+        [] compare performance for different secret sizes
+        [] compare performance for different number of parties
+        [] compare performance for different number of instructions
+
+---TODO---
+
+[x] Review all TODO's 
+[x] ensure that when any secrets are reconstructed, the only shares that are considered are the shares that the party is qualified to know. 
+    That is, disputed shares are not added to the result (unless the party is qualified to know them anyway), as this would make the results incorrect
+    [x] there should be tests that check this when we test e.g. multiplication
+
